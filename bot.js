@@ -41,22 +41,33 @@ var commands = [
 /**
  * Extracts request message and responds if necessary.
  */
-function respond(request) {
-  const message = request.text;
+async function respond(request, app = 'groupme') {
+  let message;
 
+  if(app === 'discord') {
+    message = request
+  } else {
+    message = request.text
+  }
   var response = null;
 
   if (message.charAt(0) == "!") {
     for (var i = 0; i < commands.length; i++) {
       command = commands[i];
       if (message.match(command.matcher) != null) {
-        response = command.run(message, request);
+        response = await command.run(message, request);
         break;
       }
     }
   }
 
-  send(Promise.resolve(response), this);
+  if(app === 'discord') {
+    return Promise.resolve(response)
+  } else {
+    send(Promise.resolve(response), this);
+  }
+
+  
 }
 
 /**

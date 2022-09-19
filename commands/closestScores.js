@@ -95,8 +95,8 @@ function run(command, request) {
     // Weeks between First Tuesday of season until now
     const dateDiff =
       Math.floor(
-        differenceInHours(new Date(), new Date(2022, 8, 6)) / (7 * 24)
-      ) | 1;
+        differenceInHours(new Date(), new Date(2022, 8, 1)) / (7 * 24)
+      ) | 0;
 
     if (dateDiff >= 0) {
       matchupWeek = dateDiff;

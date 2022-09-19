@@ -71,7 +71,6 @@ function getStandings(matchupWeek = 3, matchupYear = 2021) {
             response += `#${team.finalStandingsPosition || team.playoffSeed} ${memberName} (${team.wins}-${team.losses}-${team.ties})\n`;
           }
         });
-        console.log(response)
         return resolve(produceResponseObjectForText(response));
       })
       .catch((err) => {
