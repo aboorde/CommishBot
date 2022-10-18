@@ -35,39 +35,28 @@ var commands = [
   standings,
   trophies,
   activity,
-  power
+  power,
 ];
 
 /**
  * Extracts request message and responds if necessary.
  */
-async function respond(request, app = 'groupme') {
-  let message;
+function respond(request) {
+  const message = request.text;
 
-  if(app === 'discord') {
-    message = request
-  } else {
-    message = request.text
-  }
   var response = null;
 
   if (message.charAt(0) == "!") {
     for (var i = 0; i < commands.length; i++) {
       command = commands[i];
       if (message.match(command.matcher) != null) {
-        response = await command.run(message, request);
+        response = command.run(message, request);
         break;
       }
     }
   }
 
-  if(app === 'discord') {
-    return Promise.resolve(response)
-  } else {
-    send(Promise.resolve(response), this);
-  }
-
-  
+  send(Promise.resolve(response), this);
 }
 
 /**
