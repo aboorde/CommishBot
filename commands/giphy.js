@@ -1,5 +1,5 @@
-var HTTP = require("http");
-const { produceResponseObjectForText } = require("../helpers/utils");
+import HTTP from "http";
+import { produceResponseObjectForText } from "../helpers/utils.js";
 
 var apiKey = process.env.API_KEY;
 
@@ -45,5 +45,7 @@ function encodeQuery(query) {
   return query.replace(/\s/g, "+");
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

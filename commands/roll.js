@@ -14,6 +14,7 @@ function run(command, request) {
     text: roll,
   };
 }
-
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

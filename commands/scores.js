@@ -1,11 +1,12 @@
 const matcher = /!scores/;
-const { Client } = require("espn-fantasy-football-api/node");
-const {
+import pkg from "espn-fantasy-football-api/node.js";
+const { Client } = pkg;
+import {
   produceResponseObjectForText,
   produceImmediateResponse,
-} = require("../helpers/utils");
-const espnMembers = require("../constants/espnMembers").espnMembers;
-const differenceInHours = require("date-fns/differenceInHours");
+} from "../helpers/utils.js";
+import { espnMembers } from "../constants/espnMembers.js";
+import { differenceInHours } from "date-fns";
 
 function isGetMatchupByWeek(splitCommand) {
   return (
@@ -115,5 +116,7 @@ function run(command, request) {
   return helpMessage();
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

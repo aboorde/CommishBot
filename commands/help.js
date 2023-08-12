@@ -1,4 +1,3 @@
-var { produceResponseObjectForText } = require("../helpers/utils");
 var matcher = /!help/;
 
 function run(command, request) {
@@ -21,5 +20,7 @@ function run(command, request) {
   };
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

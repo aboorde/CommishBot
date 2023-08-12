@@ -21,5 +21,8 @@ export const run = (command, request) => {
     text: text,
   };
 };
-// exports.run = run;
-// exports.matcher = matcher;
+
+export default {
+  run,
+  matcher,
+};

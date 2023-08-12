@@ -1,8 +1,9 @@
-const { Configuration, OpenAIApi } = require("openai");
-const {
+import { Configuration, OpenAIApi } from "openai";
+import {
   produceResponseObjectForText,
   produceImmediateResponse,
-} = require("../helpers/utils");
+} from "../helpers/utils.js";
+
 const matcher = /!chat/;
 
 function run(command, request) {
@@ -54,5 +55,7 @@ function run(command, request) {
   }
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

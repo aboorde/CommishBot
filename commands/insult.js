@@ -1,9 +1,5 @@
 var matcher = /!insult(s|\s.*)/;
-var insults = require("../constants/insults.js");
-
-function getRandomInt(n) {
-  return (Math.floor(Math.random() * 1000000) + 1) % n;
-}
+import insults from "../constants/insults.js";
 
 function run(command, request) {
   var splitCommand = command.split(" ");
@@ -21,5 +17,7 @@ function run(command, request) {
   }
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

@@ -7,5 +7,7 @@ function run(command, request) {
   };
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

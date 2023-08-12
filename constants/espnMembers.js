@@ -1,4 +1,4 @@
-var espnMembers = [
+export const espnMembers = [
   {
     id: 1,
     name: "Nixon",
@@ -56,5 +56,3 @@ var espnMembers = [
     name: "Mims",
   },
 ];
-
-exports.espnMembers = espnMembers;

@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const { respond } = require("../bot"); // Adjust path accordingly
+import fetch from "node-fetch";
+import { respond } from "../bot.js"; // Adjust path accordingly
 
 // Mocking dependencies
 jest.mock("node-fetch");

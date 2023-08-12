@@ -1,4 +1,4 @@
-const cached = require("../cached");
+import cached from "../cached.js";
 
 const matcher = /!all(\s.*)/;
 
@@ -26,5 +26,7 @@ function run(command, request) {
   };
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  matcher,
+  run,
+};

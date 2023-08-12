@@ -1,12 +1,13 @@
 const matcher = /!activity/;
-const { Client } = require("espn-fantasy-football-api/node");
-const {
+import pkg from "espn-fantasy-football-api/node.js";
+const { Client } = pkg;
+import {
   produceResponseObjectForText,
   produceImmediateResponse,
-} = require("../helpers/utils");
-const espnMembers = require("../constants/espnMembers").espnMembers;
+} from "../helpers/utils.js";
+import { espnMembers } from "../constants/espnMembers.js";
 
-function getActivity() {
+const getActivity = () => {
   const getActivityResponse = (teamId, teamIds, action, player, bidAmount) => {
     const memberName = espnMembers.find((member) => member.id === teamId).name;
 
@@ -71,15 +72,15 @@ function getActivity() {
         );
       });
   });
-}
+};
 
-function helpMessage() {
+const helpMessage = () => {
   return produceImmediateResponse(
     "Usage:\n" + "!activity  # returns recent league transactions\n"
   );
-}
+};
 
-function run(command, request) {
+const run = (command, request) => {
   const splitCommand = command.split(" ");
   if (command.trim() === "!activity") {
     return getActivity();
@@ -88,7 +89,9 @@ function run(command, request) {
     return helpMessage();
   }
   return helpMessage();
-}
+};
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

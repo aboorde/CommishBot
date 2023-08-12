@@ -1,8 +1,8 @@
-var pg = require("pg");
-var {
+import pg from "pg";
+import {
   produceResponseObjectForText,
   produceImmediateResponse,
-} = require("../helpers/utils");
+} from "../helpers/utils.js";
 var dbUrl = process.env.DATABASE_URL;
 var matcher = /!pin(s|\s.*)/;
 
@@ -255,5 +255,7 @@ function createPin(pinName, pinContent) {
   });
 }
 
-exports.run = run;
-exports.matcher = matcher;
+export default {
+  run,
+  matcher,
+};

@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   "Your birth certificate is an apology letter from the condom factory.",
   "I'd like to see things from your point of view but I can't seem to get my head that far up my ass.",
   "You must have been born on a highway because that's where most accidents happen.",
