@@ -7,7 +7,7 @@ var commands = {
   ping: require("./commands/ping"),
   pins: require("./commands/pins"),
   roll: require("./commands/roll"),
-  draft: require("./commands/draft"),
+  draft: require("./commands/draft.mjs"),
   help: require("./commands/help"),
   insult: require("./commands/insult"),
   scores: require("./commands/scores"),
