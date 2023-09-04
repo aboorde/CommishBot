@@ -23,7 +23,7 @@ client.once("ready", () => {
 client.login(process.env.DISCORD_TOKEN);
 client.on("messageCreate", (message) => {
   if (!message.author.bot && message.content.charAt(0) == "!") {
-    bot.respond(message.content, "discord").then((res) => {
+    respond(message.content, "discord").then((res) => {
       if (res && res.text) {
         message.channel.send(res.text);
       }
