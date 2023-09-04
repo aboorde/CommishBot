@@ -42,8 +42,14 @@ const commands = {
  * Extracts request message and responds if necessary.
  * Send request to GroupMe API to post message on bot's behalf
  */
-export const respond = async (request) => {
-  const { text: message } = request;
+export const respond = async (request, app = "groupme") => {
+  let message;
+
+  if (app === "discord") {
+    message = request;
+  } else {
+    message = request.text;
+  }
 
   if (message.charAt(0) === "!") {
     const commandKey = message.split(" ")[0].substring(1); // Extract command key
@@ -51,7 +57,13 @@ export const respond = async (request) => {
 
     if (command && message.match(command.matcher) !== null) {
       const response = await command.run(message, request);
-      if (response) await sendHttpRequest(response);
+      if (response) {
+        if (app === "discord") {
+          return Promise.resolve(response);
+        } else {
+          await sendHttpRequest(response);
+        }
+      }
     }
   }
 };
