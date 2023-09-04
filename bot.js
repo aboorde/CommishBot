@@ -18,8 +18,9 @@ import standings from "./commands/standings.js";
 import activity from "./commands/activity.js";
 import power from "./commands/power.js";
 import chat from "./commands/chat.js";
+import matchup from "./commands/sleeper/matchup.js";
 
-const commands = {
+const groupmeCommands = {
   all,
   flip,
   ping,
@@ -38,6 +39,19 @@ const commands = {
   chat,
 };
 
+const discordCommands = {
+  flip,
+  ping,
+  pins,
+  roll,
+  help,
+  insult,
+  scores,
+  giphy,
+  chat,
+  matchup,
+};
+
 /**
  * Extracts request message and responds if necessary.
  * Send request to GroupMe API to post message on bot's behalf
@@ -53,7 +67,12 @@ export const respond = async (request, app = "groupme") => {
 
   if (message.charAt(0) === "!") {
     const commandKey = message.split(" ")[0].substring(1); // Extract command key
-    const command = commands[commandKey];
+    let command;
+    if (app === "discord") {
+      command = discordCommands[commandKey];
+    } else {
+      command = groupmeCommands[commandKey];
+    }
 
     if (command && message.match(command.matcher) !== null) {
       const response = await command.run(message, request);
