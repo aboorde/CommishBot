@@ -21,6 +21,7 @@ function run(command, request) {
               response +
               `${homeTeam.name}: ${homeTeam.points} --- ${awayTeam.name}: ${awayTeam.points}\n`;
           }
+          return resolve(produceResponseObjectForText(response));
         })
         .catch((err) => {
           console.error(err);
