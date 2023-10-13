@@ -1,12 +1,7 @@
 export const matcher = /!draft/;
 
-<<<<<<< HEAD
-export const run = (command, request) => {
-  const countDownDate = new Date("Sept 5, 2023 20:00:00 GMT-0500").getTime();
-=======
 function run(command, request) {
   const countDownDate = new Date("Sept 5, 2023 19:00:00 GMT-0500").getTime();
->>>>>>> beta
   const now = new Date().getTime();
   const timeleft = countDownDate - now;
 
@@ -25,7 +20,7 @@ function run(command, request) {
   return {
     text: text,
   };
-};
+}
 
 export default {
   run,

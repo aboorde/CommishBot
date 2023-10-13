@@ -44,10 +44,16 @@ function run(command, request) {
           })
           .catch((e) => {
             console.error(e);
-            reject(e);
+            // reject(e);
+            return resolve(
+              produceResponseObjectForText("Talk to AJ something fucked up")
+            );
           });
       } catch (e) {
-        reject(e);
+        // reject(e);
+        return resolve(
+          produceResponseObjectForText("Talk to AJ something fucked up")
+        );
       }
     });
   } else {
