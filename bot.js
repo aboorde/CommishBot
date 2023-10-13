@@ -19,6 +19,7 @@ import activity from "./commands/activity.js";
 import power from "./commands/power.js";
 import chat from "./commands/chat.js";
 import matchup from "./commands/sleeper/matchup.js";
+import image from "./commands/image.js";
 
 const groupmeCommands = {
   all,
@@ -37,6 +38,7 @@ const groupmeCommands = {
   activity,
   power,
   chat,
+  image,
 };
 
 const discordCommands = {
@@ -50,6 +52,7 @@ const discordCommands = {
   giphy,
   chat,
   matchup,
+  image,
 };
 
 /**
