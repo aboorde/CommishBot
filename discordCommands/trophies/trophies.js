@@ -58,6 +58,7 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
       SWID: process.env.SWID,
     });
     console.error("WAT MY CLIENT", myClient);
+    console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     const boxscores = await myClient.getBoxscoreForWeek({
       seasonId: Number.parseInt(matchupYear),
       matchupPeriodId: Number.parseInt(matchupWeek),
