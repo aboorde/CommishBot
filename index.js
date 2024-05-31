@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { respond } from "./bot.js";
 import { Client, Collection, GatewayIntentBits, Events } from "discord.js";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 // Create a new client instance
 const client = new Client({
