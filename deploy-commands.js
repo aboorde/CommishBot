@@ -4,6 +4,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "url";
 
+// RUN THIS FILE MANUALLY WITH A CONFIG.JS TO IMPORT SLASH COMMANDS
+// node deploy-commands.js
+// Need clientId, guildId, token
+// will look through /discordCommands/* as well as files directly in /discordCommands
+
 const commands = [];
 // Get the current file path and directory
 const __filename = fileURLToPath(import.meta.url);
