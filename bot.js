@@ -81,7 +81,7 @@ export const respond = async (request, app = "groupme") => {
       const response = await command.run(message, request);
       if (response) {
         if (app === "discord") {
-          return Promise.resolve(response);
+          return response;
         } else {
           await sendHttpRequest(response);
         }
