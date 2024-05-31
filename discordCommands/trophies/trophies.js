@@ -1,10 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import pkg from "espn-fantasy-football-api/node.js";
 const { Client } = pkg;
-import {
-  produceResponseObjectForText,
-  formatNumber,
-} from "../../helpers/utils.js";
+import { formatNumber } from "../../helpers/utils.js";
 import { espnMembers } from "../../constants/espnMembers.js";
 
 export const data = new SlashCommandBuilder()
@@ -12,14 +9,14 @@ export const data = new SlashCommandBuilder()
   .setDescription("Returns trophies by week and year")
   .addStringOption((option) =>
     option
-      .setName("matchupWeek")
+      .setName("week")
       .setDescription("input week of matchup")
       .setRequired(true)
   )
   .addStringOption((option) =>
     option
-      .setName("matchupYear")
-      .setDescription("set year of matchup")
+      .setName("year")
+      .setDescription("input year of matchup")
       .setRequired(true)
   );
 
