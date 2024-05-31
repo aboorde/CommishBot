@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { Client } from "espn-fantasy-football-api/node";
+import { Client } from "espn-fantasy-football-api/node.js";
 import { formatNumber } from "../../helpers/utils.js";
 import { espnMembers } from "../../constants/espnMembers.js";
 
