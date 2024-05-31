@@ -89,9 +89,9 @@ try {
 // Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN);
 
-client.on("messageCreate", (message) => {
+client.on("messageCreate", async (message) => {
   if (!message.author.bot && message.content.charAt(0) == "!") {
-    respond(message.content, "discord").then((res) => {
+    await respond(message.content, "discord").then((res) => {
       if (res && res.text) {
         message.channel.send(res.text);
       }
