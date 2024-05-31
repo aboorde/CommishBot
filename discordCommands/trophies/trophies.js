@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import pkg from "espn-fantasy-football-api/node.js";
-const { Client } = pkg;
+import { Client } from "espn-fantasy-football-api/node";
 import { formatNumber } from "../../helpers/utils.js";
 import { espnMembers } from "../../constants/espnMembers.js";
 
@@ -50,13 +49,14 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
 
   // return new Promise(function (resolve, reject) {
   try {
-    const myClient = await new Client({
+    const myClient = new Client({
       leagueId: Number.parseInt(process.env.LEAGUE_ID),
-    });
-    await myClient.setCookies({
       espnS2: process.env.ESPN_S2,
       SWID: process.env.SWID,
     });
+    // await myClient.setCookies({
+
+    // });
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     const boxscores = await myClient.getBoxscoreForWeek({
