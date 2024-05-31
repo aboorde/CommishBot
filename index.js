@@ -1,8 +1,10 @@
 import "dotenv/config";
 
 import express from "express";
+const fs = require("node:fs");
+const path = require("node:path");
 import { respond } from "./bot.js";
-import { Client, GatewayIntentBits } from "discord.js";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
 
 // Create a new client instance
 const client = new Client({
