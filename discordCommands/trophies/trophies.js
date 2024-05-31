@@ -55,7 +55,7 @@ export async function execute(interaction) {
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     myClient
-      .getBoxscoreForWeek({
+      .getHistoricalScoreboardForWeek({
         seasonId: matchupYear,
         matchupPeriodId: matchupWeek,
         scoringPeriodId: matchupWeek,
