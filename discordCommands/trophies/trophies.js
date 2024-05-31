@@ -52,12 +52,11 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
     // const { Client } = await import("espn-fantasy-football-api/node-dev.js");
     const myClient = new Client({
       leagueId: Number.parseInt(process.env.LEAGUE_ID),
+    });
+    myClient.setCookies({
       espnS2: process.env.ESPN_S2,
       SWID: process.env.SWID,
     });
-    // await myClient.setCookies({
-
-    // });
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     return myClient
