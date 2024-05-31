@@ -17,6 +17,7 @@ export async function execute(interaction) {
     await interaction.reply("No query provided!");
     return;
   }
+  await interaction.deferReply();
   try {
     const openai = new OpenAI({
       apiKey: process.env.OPEN_API_KEY, // This is also the default, can be omitted
@@ -29,12 +30,12 @@ export async function execute(interaction) {
     });
 
     const image_url = response.data[0].url;
-    return interaction.reply(
+    await interaction.editReply(
       image_url || "Talk to AJ something went wrong returning a url"
     );
   } catch (e) {
     console.error("/image error: ", e);
-    return interaction.reply(
+    await interaction.editReply(
       "Talk to AJ something went wrong on generation step"
     );
   }
