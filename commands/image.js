@@ -45,7 +45,7 @@ async function run(command, request) {
   if (chatString.length) {
     try {
       const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
+        apiKey: process.env.OPEN_API_KEY, // This is also the default, can be omitted
       });
       const response = await openai.images.generate({
         model: "dall-e-3",
