@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import { formatNumber } from "../../helpers/utils.js";
 import { espnMembers } from "../../constants/espnMembers.js";
-// import { Client } from "../../espnClient.cjs";
+import { Client } from "../../espnClient.cjs";
 
 export const data = new SlashCommandBuilder()
   .setName("trophies")
@@ -49,7 +49,7 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
 
   // return new Promise(function (resolve, reject) {
   try {
-    const { Client } = await import("espn-fantasy-football-api/node-dev.js");
+    // const { Client } = await import("espn-fantasy-football-api/node-dev.js");
     const myClient = new Client({
       leagueId: Number.parseInt(process.env.LEAGUE_ID),
       espnS2: process.env.ESPN_S2,

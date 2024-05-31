@@ -1,2 +1,2 @@
-const { Client } = require("espn-fantasy-football-api/node");
+const { Client } = require("espn-fantasy-football-api/node-dev");
 module.exports = { Client };
