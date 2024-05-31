@@ -23,7 +23,7 @@ export async function execute(interaction) {
     });
     const response = await openai.images.generate({
       model: "dall-e-3",
-      prompt: chatString,
+      prompt: query,
       n: 1,
       size: "1024x1024",
     });
