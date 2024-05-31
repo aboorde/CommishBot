@@ -31,11 +31,6 @@ export async function execute(interaction) {
     return;
   }
   await interaction.deferReply({ ephemeral: true });
-  const response = await getMatchups(matchupWeek, matchupYear);
-  await interaction.editReply({ content: response, ephemeral: true });
-}
-
-const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
   let lowScore = 9999;
   let lowScoreTeam = "";
   let highScore = -1;
@@ -59,13 +54,13 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
     });
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
-    return myClient
+    myClient
       .getBoxscoreForWeek({
         seasonId: Number.parseInt(matchupYear),
         matchupPeriodId: Number.parseInt(matchupWeek),
         scoringPeriodId: Number.parseInt(matchupWeek),
       })
-      .then((boxscores) => {
+      .then(async (boxscores) => {
         console.error("WAT BOXSCORES", boxscores);
         boxscores.forEach(
           ({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
@@ -133,9 +128,9 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
             biggestBlowout
           )}`;
         console.log(response);
-        return response;
+        await interaction.editReply({ content: response, ephemeral: true });
       });
   } catch (e) {
     console.error("WAT REAL ERROR", e);
   }
-};
+}
