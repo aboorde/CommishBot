@@ -58,11 +58,6 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
     // await myClient.setCookies({
 
     // });
-    myClient
-      .getLeagueInfo({ seasonId: Number.parseInt(matchupYear) })
-      .then((info) => {
-        console.log("WAT INFO: ", info);
-      });
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     return myClient
