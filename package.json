@@ -15,7 +15,7 @@
     "espn-fantasy-football-api": "git+https://github.com/aboorde/ESPN-Fantasy-Football-API.git",
     "express": "^4.17.1",
     "node-fetch": "^3.3.2",
-    "openai": "^3.3.0",
+    "openai": "^4.47.2",
     "pg": "8.7.1"
   },
   "devDependencies": {
