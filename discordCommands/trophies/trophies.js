@@ -21,8 +21,8 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function execute(interaction) {
-  const matchupWeek = interaction.options.getString("matchupWeek");
-  const matchupYear = interaction.options.getString("matchupYear");
+  const matchupWeek = interaction.options.getString("week");
+  const matchupYear = interaction.options.getString("year");
   if (!matchupWeek || !matchupYear) {
     await interaction.reply("incorrect parameters input");
     return;
