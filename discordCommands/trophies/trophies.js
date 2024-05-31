@@ -56,9 +56,9 @@ export async function execute(interaction) {
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
     myClient
       .getBoxscoreForWeek({
-        seasonId: Number.parseInt(matchupYear),
-        matchupPeriodId: Number.parseInt(matchupWeek),
-        scoringPeriodId: Number.parseInt(matchupWeek),
+        seasonId: matchupYear,
+        matchupPeriodId: matchupWeek,
+        scoringPeriodId: matchupWeek,
       })
       .then(async (boxscores) => {
         console.error("WAT BOXSCORES", boxscores);
