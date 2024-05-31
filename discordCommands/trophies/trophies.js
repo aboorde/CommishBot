@@ -54,8 +54,14 @@ export async function execute(interaction) {
     });
     console.error("WAT MY CLIENT", myClient);
     console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
+    const testMatchups = await myClient.getBoxscoreForWeek({
+      seasonId: matchupYear,
+      matchupPeriodId: matchupWeek,
+      scoringPeriodId: matchupWeek,
+    });
+    console.log("WAT TESTMATCHUPS", testMatchups);
     myClient
-      .getHistoricalScoreboardForWeek({
+      .getBoxscoreForWeek({
         seasonId: matchupYear,
         matchupPeriodId: matchupWeek,
         scoringPeriodId: matchupWeek,
