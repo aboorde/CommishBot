@@ -56,7 +56,7 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
     espnS2: process.env.ESPN_S2,
     SWID: process.env.SWID,
   });
-
+  console.error("WAT MY CLIENT", myClient);
   return await myClient
     .getBoxscoreForWeek({
       seasonId: Number.parseInt(matchupYear),
@@ -64,6 +64,7 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
       scoringPeriodId: Number.parseInt(matchupWeek),
     })
     .then((matchups) => {
+      console.error("WAT MY matchups", matchups);
       matchups.forEach(({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
         const homeMemberName = espnMembers.find(
           (member) => member.id === homeTeamId
