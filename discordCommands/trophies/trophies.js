@@ -10,13 +10,13 @@ import { espnMembers } from "../../constants/espnMembers.js";
 export const data = new SlashCommandBuilder()
   .setName("trophies")
   .setDescription("Returns trophies by week and year")
-  .addIntegerOption((option) =>
+  .addStringOption((option) =>
     option
       .setName("matchupWeek")
       .setDescription("input week of matchup")
       .setRequired(true)
   )
-  .addIntegerOption((option) =>
+  .addStringOption((option) =>
     option
       .setName("matchupYear")
       .setDescription("set year of matchup")
