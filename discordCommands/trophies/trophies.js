@@ -64,8 +64,6 @@ const getMatchups = async (matchupWeek = 1, matchupYear = 2023) => {
         seasonId: Number.parseInt(matchupYear),
         matchupPeriodId: Number.parseInt(matchupWeek),
         scoringPeriodId: Number.parseInt(matchupWeek),
-        currentMatchupPeriod: Number.parseInt(matchupWeek),
-        latestScoringPeriod: Number.parseInt(matchupWeek),
       })
       .then((boxscores) => {
         console.error("WAT BOXSCORES", boxscores);
