@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { respond } from "./bot.js";
 import { Client, Collection, GatewayIntentBits } from "discord.js";
+import { fileURLToPath } from "url";
 
 // Create a new client instance
 const client = new Client({
@@ -22,6 +23,10 @@ client.once("ready", () => {
 });
 
 client.commands = new Collection();
+
+// Get the current file path and directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const foldersPath = path.join(__dirname, "discordCommands");
 const commandFolders = fs.readdirSync(foldersPath);
