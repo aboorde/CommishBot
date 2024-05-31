@@ -53,12 +53,15 @@ async function run(command, request) {
         n: 1,
         size: "1024x1024",
       });
+      console.log("WAT RESPONSE", response);
       const image_url = response.data[0].url;
       return produceResponseObjectForText(
-        image_url || "Talk to AJ something went wrong"
+        image_url || "Talk to AJ something went wrong returning a url"
       );
     } catch (e) {
-      return produceResponseObjectForText("Talk to AJ something went wrong");
+      return produceResponseObjectForText(
+        "Talk to AJ something went wrong on generation step"
+      );
     }
   } else {
     return produceImmediateResponse("How did you get here dumb dumb");
