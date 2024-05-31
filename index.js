@@ -89,16 +89,6 @@ try {
 // Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN);
 
-// client.on("messageCreate", async (message) => {
-//   if (!message.author.bot && message.content.charAt(0) == "!") {
-//     await respond(message.content, "discord").then((res) => {
-//       if (res && res.text) {
-//         message.channel.send(res.text);
-//       }
-//     });
-//   }
-// });
-
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -131,8 +121,6 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => res.send("CommishBot, reporting for duty."));
-
-// app.post("/groupme", (req, res) => respond(req.body));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
