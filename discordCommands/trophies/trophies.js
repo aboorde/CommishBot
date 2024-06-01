@@ -134,7 +134,7 @@ export async function execute(interaction) {
             biggestBlowout
           )}`;
         console.log(response);
-        await interaction.editReply({ content: response, ephemeral: true });
+        await interaction.followUp({ content: response, ephemeral: true });
       });
   } catch (e) {
     console.error("WAT REAL ERROR", e);
