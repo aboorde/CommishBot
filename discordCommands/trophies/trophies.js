@@ -3,130 +3,179 @@ import { formatNumber } from "../../helpers/utils.js";
 import { espnMembers } from "../../constants/espnMembers.js";
 import { Client } from "../../espnClient.cjs";
 
+const HIGH_SCORE_INIT = -1;
+const LOW_SCORE_INIT = 9999;
+const SCORE_DIFF_INIT = 9999;
+
 export const data = new SlashCommandBuilder()
   .setName("trophies")
   .setDescription("Returns trophies by week and year")
   .addStringOption((option) =>
     option
       .setName("week")
-      .setDescription("input week of matchup")
+      .setDescription("Input week of matchup")
       .setRequired(true)
   )
   .addStringOption((option) =>
     option
       .setName("year")
-      .setDescription("input year of matchup")
+      .setDescription("Input year of matchup")
       .setRequired(true)
   );
 
 export const execute = async (interaction) => {
   const matchupWeek = interaction.options.getString("week");
   const matchupYear = interaction.options.getString("year");
-  console.log("WAT MATCH", matchupWeek, matchupYear);
+
   if (!matchupWeek || !matchupYear) {
     await interaction.reply({
-      content: "incorrect parameters input",
+      content: "Incorrect parameters input",
       ephemeral: true,
     });
     return;
   }
-  await interaction.deferReply({ ephemeral: true });
-  let lowScore = 9999;
-  let lowScoreTeam = "";
-  let highScore = -1;
-  let highScoreTeam = "";
-  let closeScore = 9999;
-  let closeScoreWinner = "";
-  let closeScoreLoser = "";
-  let biggestBlowout = -1;
-  let biggestBlowoutWinner = "";
-  let biggestBlowoutLoser = "";
 
-  // return new Promise(function (resolve, reject) {
+  const { LEAGUE_ID, ESPN_S2, SWID } = process.env;
+  if (!LEAGUE_ID || !ESPN_S2 || !SWID) {
+    await interaction.reply({
+      content: "Missing required environment variables",
+      ephemeral: true,
+    });
+    return;
+  }
+
+  await interaction.deferReply();
+
   try {
-    // const { Client } = await import("espn-fantasy-football-api/node-dev.js");
-    const myClient = new Client({
-      leagueId: Number.parseInt(process.env.LEAGUE_ID),
-    });
-    myClient.setCookies({
-      espnS2: process.env.ESPN_S2,
-      SWID: process.env.SWID,
-    });
-    console.error("WAT MY CLIENT", myClient);
-    console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
+    const client = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
+    client.setCookies({ espnS2: ESPN_S2, SWID });
 
-    const boxscores = await myClient.getBoxscoreForWeek({
+    const boxscores = await client.getBoxscoreForWeek({
       seasonId: matchupYear,
       matchupPeriodId: Number.parseInt(matchupWeek),
       scoringPeriodId: Number.parseInt(matchupWeek),
     });
-    console.error("WAT BOXSCORES", boxscores);
-    boxscores.forEach(({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
-      const homeMemberName = espnMembers.find(
-        (member) => member.id === homeTeamId
-      ).name;
-      const awayMemberName = espnMembers.find(
-        (member) => member.id === awayTeamId
-      ).name;
 
-      if (homeScore > highScore) {
-        highScore = homeScore;
-        highScoreTeam = homeMemberName;
-      }
-      if (homeScore < lowScore) {
-        lowScore = homeScore;
-        lowScoreTeam = homeMemberName;
-      }
-      if (awayScore > highScore) {
-        highScore = awayScore;
-        highScoreTeam = awayMemberName;
-      }
-      if (awayScore < lowScore) {
-        lowScore = awayScore;
-        lowScoreTeam = awayMemberName;
-      }
-      if (
-        awayScore - homeScore !== 0 &&
-        Math.abs(awayScore - homeScore) < closeScore
-      ) {
-        closeScore = Math.abs(awayScore - homeScore);
-        if (awayScore - homeScore < 0) {
-          closeScoreWinner = homeMemberName;
-          closeScoreLoser = awayMemberName;
-        } else {
-          closeScoreWinner = awayMemberName;
-          closeScoreLoser = homeMemberName;
-        }
-      }
-      if (Math.abs(awayScore - homeScore) > biggestBlowout) {
-        biggestBlowout = Math.abs(awayScore - homeScore);
-        if (awayScore - homeScore < 0) {
-          biggestBlowoutWinner = homeMemberName;
-          biggestBlowoutLoser = awayMemberName;
-        } else {
-          biggestBlowoutWinner = awayMemberName;
-          biggestBlowoutLoser = homeMemberName;
-        }
-      }
-    });
+    const scores = analyzeScores(boxscores);
 
-    let response =
-      `Week ${matchupWeek} ${matchupYear} Trophies:\n` +
-      `- Lowest Score with ${formatNumber(
-        lowScore
-      )} points: ${lowScoreTeam}\n` +
-      `- Highest Score with ${formatNumber(
-        highScore
-      )} points: ${highScoreTeam}\n` +
-      `- ${closeScoreWinner} barely beat ${closeScoreLoser} by a margin of ${formatNumber(
-        closeScore
-      )} points\n` +
-      `- ${biggestBlowoutLoser} blown out by ${biggestBlowoutWinner} by a margin of ${formatNumber(
-        biggestBlowout
-      )}`;
-    console.log(response);
+    const response = formatResponse(matchupWeek, matchupYear, scores);
     await interaction.editReply({ content: response, ephemeral: true });
-  } catch (e) {
-    console.error("WAT REAL ERROR", e);
+  } catch (error) {
+    console.error("Trophies command error: ", error);
+    await interaction.editReply({
+      content: `An error occurred: ${error.message}`,
+      ephemeral: true,
+    });
   }
+};
+
+const analyzeScores = (boxscores) => {
+  let scores = {
+    lowScore: LOW_SCORE_INIT,
+    lowScoreTeam: "",
+    highScore: HIGH_SCORE_INIT,
+    highScoreTeam: "",
+    closeScore: SCORE_DIFF_INIT,
+    closeScoreWinner: "",
+    closeScoreLoser: "",
+    biggestBlowout: HIGH_SCORE_INIT,
+    biggestBlowoutWinner: "",
+    biggestBlowoutLoser: "",
+  };
+
+  boxscores.forEach(({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
+    const homeMemberName = getMemberName(homeTeamId);
+    const awayMemberName = getMemberName(awayTeamId);
+
+    updateScores(homeScore, homeMemberName, scores);
+    updateScores(awayScore, awayMemberName, scores);
+    updateCloseScores(
+      homeScore,
+      awayScore,
+      homeMemberName,
+      awayMemberName,
+      scores
+    );
+    updateBlowoutScores(
+      homeScore,
+      awayScore,
+      homeMemberName,
+      awayMemberName,
+      scores
+    );
+  });
+
+  return scores;
+};
+
+const getMemberName = (teamId) => {
+  const member = espnMembers.find((member) => member.id === teamId);
+  return member ? member.name : "Unknown";
+};
+
+const updateScores = (score, teamName, scores) => {
+  if (score > scores.highScore) {
+    scores.highScore = score;
+    scores.highScoreTeam = teamName;
+  }
+  if (score < scores.lowScore) {
+    scores.lowScore = score;
+    scores.lowScoreTeam = teamName;
+  }
+};
+
+const updateCloseScores = (
+  homeScore,
+  awayScore,
+  homeMemberName,
+  awayMemberName,
+  scores
+) => {
+  const scoreDifference = Math.abs(homeScore - awayScore);
+  if (scoreDifference !== 0 && scoreDifference < scores.closeScore) {
+    scores.closeScore = scoreDifference;
+    if (homeScore > awayScore) {
+      scores.closeScoreWinner = homeMemberName;
+      scores.closeScoreLoser = awayMemberName;
+    } else {
+      scores.closeScoreWinner = awayMemberName;
+      scores.closeScoreLoser = homeMemberName;
+    }
+  }
+};
+
+const updateBlowoutScores = (
+  homeScore,
+  awayScore,
+  homeMemberName,
+  awayMemberName,
+  scores
+) => {
+  const blowoutDifference = Math.abs(homeScore - awayScore);
+  if (blowoutDifference > scores.biggestBlowout) {
+    scores.biggestBlowout = blowoutDifference;
+    if (homeScore > awayScore) {
+      scores.biggestBlowoutWinner = homeMemberName;
+      scores.biggestBlowoutLoser = awayMemberName;
+    } else {
+      scores.biggestBlowoutWinner = awayMemberName;
+      scores.biggestBlowoutLoser = homeMemberName;
+    }
+  }
+};
+
+const formatResponse = (week, year, scores) => {
+  return `Week ${week} ${year} Trophies:
+  - Lowest Score with ${formatNumber(scores.lowScore)} points: ${
+    scores.lowScoreTeam
+  }
+  - Highest Score with ${formatNumber(scores.highScore)} points: ${
+    scores.highScoreTeam
+  }
+  - ${scores.closeScoreWinner} barely beat ${
+    scores.closeScoreLoser
+  } by a margin of ${formatNumber(scores.closeScore)} points
+  - ${scores.biggestBlowoutLoser} blown out by ${
+    scores.biggestBlowoutWinner
+  } by a margin of ${formatNumber(scores.biggestBlowout)} points`;
 };
