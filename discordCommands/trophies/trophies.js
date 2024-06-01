@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-export async function execute(interaction) {
+export const execute = async (interaction) => {
   const matchupWeek = interaction.options.getString("week");
   const matchupYear = interaction.options.getString("year");
   console.log("WAT MATCH", matchupWeek, matchupYear);
@@ -31,12 +31,6 @@ export async function execute(interaction) {
     return;
   }
   await interaction.deferReply({ ephemeral: true });
-  getMatchups(matchupWeek, matchupYear).then(async (response) => {
-    await interaction.followUp({ content: response, ephemeral: true });
-  });
-}
-
-const getMatchups = (matchupWeek, matchupYear) => {
   let lowScore = 9999;
   let lowScoreTeam = "";
   let highScore = -1;
@@ -48,102 +42,91 @@ const getMatchups = (matchupWeek, matchupYear) => {
   let biggestBlowoutWinner = "";
   let biggestBlowoutLoser = "";
 
-  // return new Promise(function (resolve, reject) {})
-  return new Promise(function (resolve, reject) {
-    try {
-      // const { Client } = await import("espn-fantasy-football-api/node-dev.js");
-      const myClient = new Client({
-        leagueId: Number.parseInt(process.env.LEAGUE_ID),
-      });
-      myClient.setCookies({
-        espnS2: process.env.ESPN_S2,
-        SWID: process.env.SWID,
-      });
-      console.error("WAT MY CLIENT", myClient);
-      console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
-      myClient
-        .getBoxscoreForWeek({
-          seasonId: matchupYear,
-          matchupPeriodId: matchupWeek,
-          scoringPeriodId: matchupWeek,
-        })
-        .then(async (boxscores) => {
-          console.error("WAT BOXSCORES", boxscores);
-          boxscores.forEach(
-            ({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
-              const homeMemberName = espnMembers.find(
-                (member) => member.id === homeTeamId
-              ).name;
-              const awayMemberName = espnMembers.find(
-                (member) => member.id === awayTeamId
-              ).name;
+  // return new Promise(function (resolve, reject) {
+  try {
+    // const { Client } = await import("espn-fantasy-football-api/node-dev.js");
+    const myClient = new Client({
+      leagueId: Number.parseInt(process.env.LEAGUE_ID),
+    });
+    myClient.setCookies({
+      espnS2: process.env.ESPN_S2,
+      SWID: process.env.SWID,
+    });
+    console.error("WAT MY CLIENT", myClient);
+    console.error("WAT MATCHUP Y W", matchupYear, matchupWeek);
 
-              if (homeScore > highScore) {
-                highScore = homeScore;
-                highScoreTeam = homeMemberName;
-              }
-              if (homeScore < lowScore) {
-                lowScore = homeScore;
-                lowScoreTeam = homeMemberName;
-              }
-              if (awayScore > highScore) {
-                highScore = awayScore;
-                highScoreTeam = awayMemberName;
-              }
-              if (awayScore < lowScore) {
-                lowScore = awayScore;
-                lowScoreTeam = awayMemberName;
-              }
-              if (
-                awayScore - homeScore !== 0 &&
-                Math.abs(awayScore - homeScore) < closeScore
-              ) {
-                closeScore = Math.abs(awayScore - homeScore);
-                if (awayScore - homeScore < 0) {
-                  closeScoreWinner = homeMemberName;
-                  closeScoreLoser = awayMemberName;
-                } else {
-                  closeScoreWinner = awayMemberName;
-                  closeScoreLoser = homeMemberName;
-                }
-              }
-              if (Math.abs(awayScore - homeScore) > biggestBlowout) {
-                biggestBlowout = Math.abs(awayScore - homeScore);
-                if (awayScore - homeScore < 0) {
-                  biggestBlowoutWinner = homeMemberName;
-                  biggestBlowoutLoser = awayMemberName;
-                } else {
-                  biggestBlowoutWinner = awayMemberName;
-                  biggestBlowoutLoser = homeMemberName;
-                }
-              }
-            }
-          );
+    const boxscores = await myClient.getBoxscoreForWeek({
+      seasonId: matchupYear,
+      matchupPeriodId: Number.parseInt(matchupWeek),
+      scoringPeriodId: Number.parseInt(matchupWeek),
+    });
+    console.error("WAT BOXSCORES", boxscores);
+    boxscores.forEach(({ homeTeamId, awayTeamId, homeScore, awayScore }) => {
+      const homeMemberName = espnMembers.find(
+        (member) => member.id === homeTeamId
+      ).name;
+      const awayMemberName = espnMembers.find(
+        (member) => member.id === awayTeamId
+      ).name;
 
-          let response =
-            `Week ${matchupWeek} ${matchupYear} Trophies:\n` +
-            `- Lowest Score with ${formatNumber(
-              lowScore
-            )} points: ${lowScoreTeam}\n` +
-            `- Highest Score with ${formatNumber(
-              highScore
-            )} points: ${highScoreTeam}\n` +
-            `- ${closeScoreWinner} barely beat ${closeScoreLoser} by a margin of ${formatNumber(
-              closeScore
-            )} points\n` +
-            `- ${biggestBlowoutLoser} blown out by ${biggestBlowoutWinner} by a margin of ${formatNumber(
-              biggestBlowout
-            )}`;
-          console.log(response);
-          resolve(response);
-        })
-        .catch((e) => {
-          console.error("WAT REAL ERROR1", e);
-          reject("FAILED TROPHIES1!");
-        });
-    } catch (e) {
-      console.error("WAT REAL ERROR", e);
-      reject("FAILED TROPHIES!");
-    }
-  });
+      if (homeScore > highScore) {
+        highScore = homeScore;
+        highScoreTeam = homeMemberName;
+      }
+      if (homeScore < lowScore) {
+        lowScore = homeScore;
+        lowScoreTeam = homeMemberName;
+      }
+      if (awayScore > highScore) {
+        highScore = awayScore;
+        highScoreTeam = awayMemberName;
+      }
+      if (awayScore < lowScore) {
+        lowScore = awayScore;
+        lowScoreTeam = awayMemberName;
+      }
+      if (
+        awayScore - homeScore !== 0 &&
+        Math.abs(awayScore - homeScore) < closeScore
+      ) {
+        closeScore = Math.abs(awayScore - homeScore);
+        if (awayScore - homeScore < 0) {
+          closeScoreWinner = homeMemberName;
+          closeScoreLoser = awayMemberName;
+        } else {
+          closeScoreWinner = awayMemberName;
+          closeScoreLoser = homeMemberName;
+        }
+      }
+      if (Math.abs(awayScore - homeScore) > biggestBlowout) {
+        biggestBlowout = Math.abs(awayScore - homeScore);
+        if (awayScore - homeScore < 0) {
+          biggestBlowoutWinner = homeMemberName;
+          biggestBlowoutLoser = awayMemberName;
+        } else {
+          biggestBlowoutWinner = awayMemberName;
+          biggestBlowoutLoser = homeMemberName;
+        }
+      }
+    });
+
+    let response =
+      `Week ${matchupWeek} ${matchupYear} Trophies:\n` +
+      `- Lowest Score with ${formatNumber(
+        lowScore
+      )} points: ${lowScoreTeam}\n` +
+      `- Highest Score with ${formatNumber(
+        highScore
+      )} points: ${highScoreTeam}\n` +
+      `- ${closeScoreWinner} barely beat ${closeScoreLoser} by a margin of ${formatNumber(
+        closeScore
+      )} points\n` +
+      `- ${biggestBlowoutLoser} blown out by ${biggestBlowoutWinner} by a margin of ${formatNumber(
+        biggestBlowout
+      )}`;
+    console.log(response);
+    await interaction.editReply({ content: response, ephemeral: true });
+  } catch (e) {
+    console.error("WAT REAL ERROR", e);
+  }
 };
