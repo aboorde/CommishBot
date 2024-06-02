@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@vercel/postgres": "^0.8.0",
     "date-fns": "^2.29.2",
     "discord.js": "^14.15.2",
     "espn-fantasy-football-api": "git+https://github.com/aboorde/ESPN-Fantasy-Football-API.git",

@@ -14,7 +14,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
   const query = interaction.options.getString("query");
   if (!query) {
-    await interaction.reply("No query provided!");
+    await interaction.reply({ content: "No query provided!", ephemeral: true });
     return;
   }
   await interaction.deferReply();

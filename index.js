@@ -1,9 +1,8 @@
 import "dotenv/config";
-
+// import { sql } from "@vercel/postgres";
 import express from "express";
 import fs from "node:fs";
 import path from "node:path";
-// import { respond } from "./bot.js";
 import { Client, Collection, GatewayIntentBits, Events } from "discord.js";
 import { fileURLToPath, pathToFileURL } from "url";
 
@@ -121,6 +120,22 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => res.send("CommishBot, reporting for duty."));
+
+// app.get("/create-bets", async (req, res) => {
+//   try {
+//     const result = await sql`
+//   CREATE TABLE Bets (
+//     BettorOne varchar(255),
+//     BettorTwo varchar(255),
+//     Description varchar(255),
+//     Amount decimal(10, 2)
+//   );
+// `;
+//     return res.send(result);
+//   } catch (error) {
+//     console.error("create error: ", error);
+//   }
+// });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
