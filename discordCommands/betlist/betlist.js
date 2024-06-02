@@ -13,18 +13,23 @@ export const execute = async (interaction) => {
       SELECT * FROM Bets;
   `;
     const headers = result.fields.map((field) => field.name);
-    const betData = await result.rows.map(
-      async (row) =>
-        await headers.map(async (header) => {
-          if (header === "bettorone" || header === "bettortwo") {
-            const username = await interaction.guild.members.fetch(row[header]);
-            console.log("WAT USERN: ", username.nickname);
-            if (username) return username.nickname;
-            return "Unknown";
-          } else {
-            return row[header];
-          }
-        })
+    const betData = await Promise.all(
+      result.rows.map(async (row) => {
+        const rowData = await Promise.all(
+          headers.map(async (header) => {
+            if (header === "bettorone" || header === "bettortwo") {
+              const username = await interaction.guild.members.fetch(
+                row[header]
+              );
+              if (username) return username.nickname;
+              return "Unknown";
+            } else {
+              return row[header];
+            }
+          })
+        );
+        return rowData;
+      })
     );
     const table = generateTable(headers, betData);
     await interaction.editReply({
