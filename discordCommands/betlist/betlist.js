@@ -54,10 +54,9 @@ const getBetData = async (rows, headers, interaction) => {
 
 // Helper function to format bets into a readable list
 const formatBets = (headers, betData) => {
-  let formattedMessage = "**Current Bets:**\n\n";
+  let formattedMessage = "";
 
-  betData.forEach((row, index) => {
-    formattedMessage += `**Bet ${index + 1}:**\n`;
+  betData.forEach((row) => {
     row.forEach((cell, i) => {
       formattedMessage += `**${headers[i]}**: ${cell}\n`;
     });
