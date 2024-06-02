@@ -44,13 +44,21 @@ export const execute = async (interaction) => {
     return;
   }
 
+  if (matchupYear < 2018) {
+    await interaction.reply({
+      content: "Cant view activity before 2018",
+      ephemeral: true,
+    });
+    return;
+  }
+
   await interaction.deferReply();
 
   try {
-    const client = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
-    client.setCookies({ espnS2: ESPN_S2, SWID });
+    const espnClient = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
+    espnClient.setCookies({ espnS2: ESPN_S2, SWID });
 
-    const boxscores = await client.getBoxscoreForWeek({
+    const boxscores = await espnClient.getBoxscoreForWeek({
       seasonId: matchupYear,
       matchupPeriodId: Number.parseInt(matchupWeek),
       scoringPeriodId: Number.parseInt(matchupWeek),

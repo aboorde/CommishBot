@@ -47,13 +47,13 @@ export const execute = async (interaction) => {
     return;
   }
 
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply();
 
   try {
-    const client = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
-    client.setCookies({ espnS2: ESPN_S2, SWID });
+    const espnClient = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
+    espnClient.setCookies({ espnS2: ESPN_S2, SWID });
 
-    const teams = await myClient.getTeamsAtWeek({
+    const teams = await espnClient.getTeamsAtWeek({
       seasonId: Number.parseInt(matchupYear),
       scoringPeriodId: Number.parseInt(matchupWeek),
     });
@@ -87,7 +87,7 @@ export const execute = async (interaction) => {
 
     console.log(response);
 
-    await interaction.editReply({ content: response, ephemeral: true });
+    await interaction.editReply({ content: response });
   } catch (e) {
     console.error("Standings command error: ", e);
     await interaction.editReply({
