@@ -6,7 +6,7 @@ export const data = new SlashCommandBuilder()
   .setDescription("Lists all current bets made");
 
 export const execute = async (interaction) => {
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
 
   try {
     const result = await sql`
@@ -18,6 +18,7 @@ export const execute = async (interaction) => {
         await headers.map(async (header) => {
           if (header === "bettorone" || header === "bettortwo") {
             const username = await interaction.guild.members.fetch(row[header]);
+            console.log("WAT USERNAME:", row[header], username);
             if (username) return username;
             return "Unknown";
           } else {
@@ -28,6 +29,7 @@ export const execute = async (interaction) => {
     const table = generateTable(headers, data);
     await interaction.editReply({
       content: "```\n" + table + "\n```",
+      ephemeral: true,
     });
   } catch (error) {
     console.error("create error: ", error);
