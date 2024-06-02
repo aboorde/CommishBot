@@ -47,7 +47,7 @@ export const execute = async (interaction) => {
     return;
   }
 
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
 
   try {
     const client = new Client({ leagueId: Number.parseInt(LEAGUE_ID) });
@@ -87,11 +87,11 @@ export const execute = async (interaction) => {
 
     console.log(response);
 
-    await interaction.editReply({ content: response });
+    await interaction.editReply({ content: response, ephemeral: true });
   } catch (e) {
-    console.error("Standings command error: ", error);
+    console.error("Standings command error: ", e);
     await interaction.editReply({
-      content: `An error occurred: ${error.message}`,
+      content: `An error occurred: ${e.message}`,
       ephemeral: true,
     });
   }
