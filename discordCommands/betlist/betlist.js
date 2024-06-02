@@ -43,7 +43,7 @@ const generateTable = (headers, data) => {
   // Calculate the width of each column
   const colWidths = headers.map(
     (header, i) =>
-      Math.max(header.length, ...data.map((row) => row[i].length)) + 2
+      Math.max(header.length, ...data.map((row) => String(row[i]).length)) + 2
   );
 
   // Top border
@@ -69,7 +69,9 @@ const generateTable = (headers, data) => {
 
   // Data rows
   for (let row of data) {
-    let splitRows = row.map((cell, i) => splitCell(cell, colWidths[i] - 2));
+    let splitRows = row.map((cell, i) =>
+      splitCell(String(cell), colWidths[i] - 2)
+    );
     let maxLines = Math.max(...splitRows.map((lines) => lines.length));
     for (let line = 0; line < maxLines; line++) {
       table += "|";
