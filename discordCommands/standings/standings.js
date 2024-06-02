@@ -58,13 +58,27 @@ export const execute = async (interaction) => {
       scoringPeriodId: Number.parseInt(matchupWeek),
     });
 
-    let sortedTeams;
-    if (teams[0].finalStandingsPosition === 0) {
-      sortedTeams = teams.sort((a, b) => a.playoffSeed - b.playoffSeed);
+    let sortedTeams = [];
+    if ([...teams][0].finalStandingsPosition === 0) {
+      sortedTeams = [...teams].sort((a, b) => {
+        if (a.playoffSeed < b.playoffSeed) {
+          return -1;
+        }
+        if (a.playoffSeed > b.playoffSeed) {
+          return 1;
+        }
+        return 0;
+      });
     } else {
-      sortedTeams = teams.sort(
-        (a, b) => a.finalStandingsPosition - b.finalStandingsPosition
-      );
+      sortedTeams = [...teams].sort((a, b) => {
+        if (a.finalStandingsPosition < b.finalStandingsPosition) {
+          return -1;
+        }
+        if (a.finalStandingsPosition > b.finalStandingsPosition) {
+          return 1;
+        }
+        return 0;
+      });
     }
 
     let response = "";
