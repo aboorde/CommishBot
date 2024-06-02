@@ -59,7 +59,7 @@ export const execute = async (interaction) => {
     const scores = analyzeScores(boxscores);
 
     const response = formatResponse(matchupWeek, matchupYear, scores);
-    await interaction.editReply({ content: response, ephemeral: true });
+    await interaction.editReply({ content: response });
   } catch (error) {
     console.error("Trophies command error: ", error);
     await interaction.editReply({
