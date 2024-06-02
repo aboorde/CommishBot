@@ -13,7 +13,7 @@ export const execute = async (interaction) => {
       SELECT * FROM Bets;
   `;
     const headers = result.fields.map((field) => field.name);
-    const data = await result.rows.map(
+    const betData = await result.rows.map(
       async (row) =>
         await headers.map(async (header) => {
           if (header === "bettorone" || header === "bettortwo") {
@@ -26,7 +26,7 @@ export const execute = async (interaction) => {
           }
         })
     );
-    const table = generateTable(headers, data);
+    const table = generateTable(headers, betData);
     await interaction.editReply({
       content: "```\n" + table + "\n```",
       ephemeral: true,
@@ -40,13 +40,14 @@ export const execute = async (interaction) => {
   }
 };
 
-const generateTable = (headers, data) => {
+const generateTable = (headers, betData) => {
   let table = "";
 
   // Calculate the width of each column
   const colWidths = headers.map(
     (header, i) =>
-      Math.max(header.length, ...data.map((row) => String(row[i]).length)) + 2
+      Math.max(header.length, ...betData.map((row) => String(row[i]).length)) +
+      2
   );
 
   // Top border
@@ -71,7 +72,7 @@ const generateTable = (headers, data) => {
   table += "\n";
 
   // Data rows
-  for (let row of data) {
+  for (let row of betData) {
     let splitRows = row.map((cell, i) =>
       splitCell(String(cell), colWidths[i] - 2)
     );
