@@ -16,9 +16,9 @@ export const execute = async (interaction) => {
     const headers = result.fields.map((field) => field.name);
     const betData = await getBetData(result.rows, headers, interaction);
 
-    const table = generateTable(headers, betData);
+    const formattedMessage = formatBets(headers, betData);
     await interaction.editReply({
-      content: "```\n" + table + "\n```",
+      content: formattedMessage,
     });
   } catch (error) {
     console.error("Error creating bet list: ", error);
@@ -52,75 +52,17 @@ const getBetData = async (rows, headers, interaction) => {
   );
 };
 
-// Helper function to generate a table string
-const generateTable = (headers, betData) => {
-  let table = "";
+// Helper function to format bets into a readable list
+const formatBets = (headers, betData) => {
+  let formattedMessage = "**Current Bets:**\n\n";
 
-  const colWidths = headers.map(
-    (header, i) =>
-      Math.max(header.length, ...betData.map((row) => String(row[i]).length)) +
-      2
-  );
-
-  // Top border
-  table += generateBorder(colWidths);
-
-  // Header row
-  table += generateRow(headers, colWidths);
-
-  // Separator
-  table += generateBorder(colWidths);
-
-  // Data rows
-  for (let row of betData) {
-    table += generateDataRows(row, colWidths);
-  }
-
-  return table;
-};
-
-// Helper function to generate the table border
-const generateBorder = (colWidths) => {
-  let border = "+";
-  for (let width of colWidths) {
-    border += "-".repeat(width) + "+";
-  }
-  border += "\n";
-  return border;
-};
-
-// Helper function to generate a single row of the table
-const generateRow = (cells, colWidths) => {
-  let row = "|";
-  cells.forEach((cell, i) => {
-    row += " " + String(cell).padEnd(colWidths[i] - 1) + "|";
+  betData.forEach((row, index) => {
+    formattedMessage += `**Bet ${index + 1}:**\n`;
+    row.forEach((cell, i) => {
+      formattedMessage += `**${headers[i]}**: ${cell}\n`;
+    });
+    formattedMessage += "\n";
   });
-  row += "\n";
-  return row;
-};
 
-// Helper function to generate data rows, including handling multiline cells
-const generateDataRows = (row, colWidths) => {
-  let splitRows = row.map((cell, i) =>
-    splitCell(String(cell), colWidths[i] - 2)
-  );
-  let maxLines = Math.max(...splitRows.map((lines) => lines.length));
-  let rows = "";
-
-  for (let line = 0; line < maxLines; line++) {
-    rows += "|";
-    for (let i = 0; i < row.length; i++) {
-      rows += " " + (splitRows[i][line] || "").padEnd(colWidths[i] - 1) + "|";
-    }
-    rows += "\n";
-  }
-
-  rows += generateBorder(colWidths);
-  return rows;
-};
-
-// Helper function to split cell content into multiple lines
-const splitCell = (cell, width) => {
-  const regex = new RegExp(`.{1,${width}}`, "g");
-  return cell.match(regex) || [];
+  return formattedMessage;
 };
