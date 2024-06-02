@@ -16,7 +16,7 @@ export const execute = async (interaction) => {
     const data = result.rows.map((row) =>
       headers.map(async (header) => {
         if (header === "bettorone" || header === "bettortwo") {
-          username = await interaction.guild.members.fetch(row[header]);
+          const username = await interaction.guild.members.fetch(row[header]);
           if (username) return username;
           return "Unknown";
         } else {
