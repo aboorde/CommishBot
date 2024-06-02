@@ -121,15 +121,10 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.send("CommishBot, reporting for duty."));
 
-// app.get("/create-bets", async (req, res) => {
+// app.get("/view-bets", async (req, res) => {
 //   try {
 //     const result = await sql`
-//   CREATE TABLE Bets (
-//     BettorOne varchar(255),
-//     BettorTwo varchar(255),
-//     Description varchar(255),
-//     Amount decimal(10, 2)
-//   );
+//     SELECT * FROM Bets;
 // `;
 //     return res.send(result);
 //   } catch (error) {
