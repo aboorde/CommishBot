@@ -13,16 +13,17 @@ export const execute = async (interaction) => {
       SELECT * FROM Bets;
   `;
     const headers = result.fields.map((field) => field.name);
-    const data = result.rows.map((row) =>
-      headers.map(async (header) => {
-        if (header === "bettorone" || header === "bettortwo") {
-          const username = await interaction.guild.members.fetch(row[header]);
-          if (username) return username;
-          return "Unknown";
-        } else {
-          return row[header];
-        }
-      })
+    const data = await result.rows.map(
+      async (row) =>
+        await headers.map(async (header) => {
+          if (header === "bettorone" || header === "bettortwo") {
+            const username = await interaction.guild.members.fetch(row[header]);
+            if (username) return username;
+            return "Unknown";
+          } else {
+            return row[header];
+          }
+        })
     );
     const table = generateTable(headers, data);
     await interaction.editReply({
